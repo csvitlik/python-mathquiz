@@ -22,15 +22,19 @@ def myinput(s):
     return result
 
 def numberatlevel(level):
-    return random.randint(2, 2**level)
+    levels = [6, 7, 8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 30, 32]
+
+    if level < 0:
+        level = 0
+    elif level > len(levels):
+        level = len(levels)
+
+    return random.randint(2, 2**levels[level])
 
 def main():
-    levels = [32, 24, 16, 14, 12, 8, 7, 6]
-    level = levels[3] # current level
-
-    ops = ['+', '-', '*', '/', '**']
+    level = 3 # current level
+    ops = ['+', '-', '*', '/', '**'] # supported operations
     op = ops[0] # current operation
-
     running = True # currently running
 
     while running:
@@ -47,11 +51,18 @@ def main():
 
         ans = myeval(a,op,b)
         while True:
+            print(level)
             res = myinput('  {:10d}\n{} {:10d}\n'.format(a,op,b))
 
             if res == None or res == 'q':
                 running = False
                 break
+
+            if res == '<':
+                level -= 1;
+
+            if res == '>':
+                level += 1;
 
             if res == '?':
                 print(int(ans))
