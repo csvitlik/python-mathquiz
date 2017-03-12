@@ -1,3 +1,5 @@
+'''Math Quiz main module.'''
+
 from __future__ import absolute_import, division, print_function
 import random
 import sys
@@ -9,12 +11,16 @@ if sys.version[0] == '3':
 class MathQuiz:
 
     def __init__(self):
+        '''Initialize Math Quiz.'''
+
         self.level = 3                         # Default level
         self.ops = ['+', '-', '*', '/', '**']  # Supported operations
         self.op = self.ops[0]                  # Current operation
         self.running = True                    # Currently running Quiz
 
     def run(self):
+        '''Run Math Quiz.'''
+
         while self.running:
             a, b = self.randompair()
 
@@ -60,6 +66,8 @@ class MathQuiz:
                     break
 
     def randompair(self):
+        '''Generate a random a,b pair  using numberatlevel.'''
+
         a = self.numberatlevel()
         b = self.numberatlevel()
         tries = 0
@@ -74,6 +82,10 @@ class MathQuiz:
         return a, b
 
     def numberatlevel(self):
+        '''Generate a random number based on self.level.
+        Levels increase in difficult over [0, len(levels)].
+        Invalid (out of range) levels are clipped to [0, len(levels)].'''
+
         levels = [6, 7, 8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 30, 32]
 
         if self.level < 0:
@@ -84,6 +96,8 @@ class MathQuiz:
         return random.randint(2, 2**levels[self.level])
 
     def myeval(self, a, b):
+        '''Wrap eval.'''
+
         result = None
 
         try:
@@ -96,6 +110,8 @@ class MathQuiz:
         return result
 
     def myinput(self, s):
+        '''Wrap raw_input/input.'''
+
         try:
             result = raw_input(s)
         except EOFError:
