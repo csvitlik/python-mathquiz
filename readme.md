@@ -4,8 +4,6 @@ Python math flash card application.
 
 # Design Goals
 
-- [ ] Eventually, be like [clanki](https://github.com/marcusbuffett/Clanki)
-	- [ ] I'd like to re-design Anki, honestly...
 - [x] Support basic math operations: + - * / **
 - [x] Python 2/3 support
 
