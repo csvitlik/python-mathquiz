@@ -3,6 +3,7 @@
 from __future__ import absolute_import, division, print_function
 import random
 import sys
+import re
 
 if sys.version[0] == '3':
     raw_input = input
@@ -18,46 +19,93 @@ class MathQuiz:
         self.op = self.ops[0]                  # Current operation
         self.running = True                    # Currently running Quiz
 
-    def run(self):
-        '''Run Math Quiz.'''
+    def MakeTexSheet(self, op='+', nquestions=50):
+        '''Make a TeX worksheet.'''
+
+        if op in self.ops:
+            self.op = op
+        else:
+            op = '+'
+
+        latex_footer = ''
+        latex_header = ''
+        with open('tex/footer.tex', 'r') as tex:
+            latex_footer = tex.read()
+        with open('tex/header.tex', 'r') as tex:
+            latex_header = tex.read()
+
+        with open('question.tex', 'w') as qsheet:
+            with open('answer.tex', 'w') as asheet:
+                asheet.write(latex_header)
+                asheet.write('{\Huge Math Quiz Answer Sheet}\\\\')
+                asheet.write('\\begin{multicols}{3}')
+
+                qsheet.write(latex_header)
+                qsheet.write('{\Huge Math Quiz Question Sheet}\\\\')
+                qsheet.write('\\begin{multicols}{3}')
+
+                Nquestions = nquestions
+                while nquestions > 0:
+                    Q, A = self.MakeQuestion()
+                    op = self.op
+                    if op == '*':
+                        op = '\\times'
+                    if op == '/':
+                        _q = '\\frac{'
+                        _q += Q.replace('/', '}{')
+                        _q += '}'
+                        Q = _q
+                    q = '\\begin{align*} ' + \
+                        Q.replace(self.op, '&\\\\'+op) + \
+                        ' & = xxx \\numberthis \\end{align*}'
+                    a = q.replace('xxx', str(A))
+                    q = q.replace('xxx', '\\rule[1pt]{0.3\\linewidth}{.4pt}')
+
+                    asheet.write('{}\n'.format(a))
+                    qsheet.write('{}\n'.format(q))
+                    nquestions -= 1
+
+                asheet.write('\\end{multicols}')
+                asheet.write(latex_footer)
+                qsheet.write('\\end{multicols}')
+                qsheet.write(latex_footer)
+
+    def Interactive(self):
+        '''Interactive Math Quiz.'''
 
         while self.running:
-            a, b = self.randompair()
-
-            # Evaluate answer value first
-            ans = self.myeval(a, b)
+            question, answer = self.MakeQuestion()
 
             while True:
-                res = self.myinput(
-                    '  {:10d}\n{} {:10d}\n'.format(a, self.op, b))
+                resp = self.Input(question)
 
                 # 'q' to Quit
-                if res == None or res == 'q':
+                if resp == None or resp == 'q':
                     self.running = False
                     break
 
                 # '<' to decrease difficulty
-                if res == '<':
+                if resp == '<':
                     self.level -= 1
 
                 # '>' to increase difficulty
-                if res == '>':
+                if resp == '>':
                     self.level += 1
 
                 # '?' to display answer and skip to next question
-                if res == '?':
-                    print(int(ans))
+                if resp == '?':
+                    print(int(answer))
                     break
 
                 # Enter any supported operation to switch to using that
                 # instead of the current operation.
-                if res in self.ops:
-                    self.op = res
+                if resp in self.ops:
+                    self.op = resp
                     break
 
                 # Evaluate user input
                 try:
-                    if int(res) == int(ans):
+                    if int(resp) == int(answer):
                         print('Good!')
                         break
                     else:
@@ -95,26 +143,49 @@ class MathQuiz:
 
         return random.randint(2, 2**levels[self.level])
 
-    def myeval(self, a, b):
+    def Eval(self, question):
         '''Wrap eval.'''
 
         result = None
 
         try:
-            result = eval('{}{}{}'.format(a, self.op, b))
+            result = eval(question)
         except:
-            print('Invalid op:', self.op)
+            print('Invalid formula:', question)
             op = '+'
             pass
 
-        return result
+        return int(result)
 
-    def myinput(self, s):
+    def Input(self, s):
         '''Wrap raw_input/input.'''
 
         try:
-            result = raw_input(s)
+            result = raw_input(s + '=?\n')
         except EOFError:
             exit(1)
 
         return result
+
+    def MakeQuestion(self, nargs=2):
+        args = dict()
+        question = ''
+
+        Nargs = nargs
+
+        while nargs > 0:
+            a, b = self.randompair()
+            args[nargs] = b
+            args[nargs - 1] = a
+            nargs -= 2
+
+        args_keys = args.keys()
+        for i in range(Nargs):
+            question += '{}'.format(args[args_keys[i]])
+            if i + 1 < Nargs:
+                question += self.op
+
+        # Evaluate answer value first
+        answer = self.Eval(question)
+
+        return question, answer

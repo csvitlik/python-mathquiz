@@ -1,0 +1,120 @@
+\documentclass{article}
+
+\usepackage[margin=0.6667in]{geometry}%
+\usepackage[super]{nth}%
+\usepackage{multicol}%
+\usepackage[compact]{titlesec}%
+\usepackage[inline]{enumitem}%
+%\usepackage{metalogo}%
+%\usepackage{amsmath,amssymb,wasysym}%
+\usepackage{url,hyperref}%
+\usepackage{xcolor}%
+%\usepackage[protrusion]{microtype}%
+%\usepackage{fontspec,xunicode}
+\usepackage{amsmath,amssymb}
+\usepackage{mathspec,xunicode} %loads fontspec as well
+\usepackage{minted}
+
+\newcommand\myrulesize{0pt}
+\newcommand\myskipsize{0pt}
+
+% https://tex.stackexchange.com/a/42728
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+\setlength\columnseprule{\myrulesize}
+\setlength\multicolsep{\myrulesize}
+\setlength\premulticols{\myrulesize}
+
+\setlength\parindent{\myskipsize}
+\setlength\parskip{\myskipsize}
+
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+
+\definecolor{Blue}{HTML}{5599EE}
+\hypersetup{%
+	colorlinks=true,%
+	linkcolor=Blue,%
+	urlcolor=Blue,%
+	citecolor=Blue,%
+}
+\def\UrlFont{\bf}
+
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+
+\setmainfont{Go}[%
+    Path = /home/charlie/.fonts/,%
+    Extension = .ttf,%
+    BoldFont = *-Bold,%
+    BoldItalicFont = *-Bold-Italic,%
+    ItalicFont = *-Italic,%
+    UprightFont = *-Regular,%
+]
+
+\setmathrm[%
+    Path = /home/charlie/.fonts/,%
+    Extension = .ttf,%
+    BoldFont = *-Mono-Bold,%
+    BoldItalicFont = *-Mono-Bold-Italic,%
+    ItalicFont = *-Mono-Italic,%
+    UprightFont = *-Mono,%
+]{Go}
+
+\setmathfont(Digits,Latin)[%
+    Path = /home/charlie/.fonts/,%
+    Extension = .ttf,%
+    BoldFont = *-Mono-Bold,%
+    BoldItalicFont = *-Mono-Bold-Italic,%
+    ItalicFont = *-Mono-Italic,%
+    UprightFont = *-Mono,%
+]{Go}
+
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+
+\titleformat{\section}%
+{\bf\large}%format
+{}%label
+{0pt}%space
+{\myBar\hsp}%before-code
+{\normalsize}%after-code
+
+\titleformat{\subsection}%
+{\bf\normalsize}%format
+{}%label
+{0pt}%space
+{\myBar\hsp}%before-code
+{\normalsize}%after-code
+
+\titleformat{\subsubsection}%
+{\bf\small}%format
+{}%label
+{0pt}%space
+{\myBar\hsp}%before-code
+{\normalsize}%after-code
+
+\titlespacing*\section{0pt}{0pt}{0pt}
+\titlespacing*\subsection{0pt}{0pt}{0pt}
+\titlespacing*\subsubsection{0pt}{0pt}{0pt}
+
+\providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\setlist[itemize]{%
+    % pandoc is causing xelatex to explode because it's expecting a $variable$,
+    % so we have to use $$ for math mode in here, actually
+    label={\textcolor{Blue}{$$\bullet$$}},%
+    itemsep=\myskipsize,%
+    topsep=\myskipsize,%
+}
+
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+
+\begin{document}
+\hyphenpenalty=10000%
