@@ -1,2 +1,7 @@
 __pycache__/
+_minted-*/
 *.pyc
+*.aux
+*.log
+*.out
+*.pdf

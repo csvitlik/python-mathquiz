@@ -1,5 +1,6 @@
 import MathQuiz
 
 if __name__ == '__main__':
-    m = MathQuiz.MathQuiz()
-    m.run()
+    mq = MathQuiz.MathQuiz()
+    mq.MakeTexSheet('/')
+    # mq.Interactive()
